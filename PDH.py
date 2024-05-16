@@ -1,14 +1,19 @@
+# Pedestrain Detection
+
 import cv2
 from imutils.object_detection import non_max_suppression
 from imutils import resize
 import numpy as np
 
 hog = cv2.HOGDescriptor()
+
+# Set SVM detector with pre-trained pedestrian detector
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
 img = cv2.imread('f.jpg')
 img = resize(img,height=500)
 
+# Detect objects in the image, returns bounding boxes & weights for each detected object
 rects,weights = hog.detectMultiScale(img,winStride=(4,4),padding=(8,8),scale=1.05)
 
 copy = img.copy()
@@ -21,6 +26,7 @@ cv2.waitKey(0)
 r = np.array([[x,y,x+w,y+h] for x,y,w,h in rects])
 pick = non_max_suppression(r,probs=None,overlapThresh=0.65)
 
+# Draw the picked bounding boxes on the original image
 for xa,ya,xb,yb in pick:
     cv2.rectangle(img,(xa,ya),(xb,yb),(0,255,0),2)
 
